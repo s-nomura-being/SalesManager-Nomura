@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="SalesManagerApp.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="NoticeCount_Must" Description="発注通知しきい値-要発注" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">5</Value>
+    </Setting>
+    <Setting Name="NoticeCount_Low" Description="発注通知しきい値-在庫少" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="AutoRead" Description="csv自動読み取り" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="BackupPath" Description="バックアップファイル保存先" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\\SalesManagerApp\Backup</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
