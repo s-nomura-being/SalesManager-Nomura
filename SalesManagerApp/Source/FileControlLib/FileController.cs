@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesManagerApp.FileIO
+namespace FileControlLib
 {
     /// <summary>
     /// ファイルの読み書き操作を行うクラス

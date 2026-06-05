@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using CsvHelper;
 using System.Globalization;
 
-namespace SalesManagerApp.FileIO
+namespace FileControlLib.Processor
 {
     /// <summary>
     /// CSVファイルを処理する具体クラス
@@ -96,8 +96,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return data;
@@ -122,7 +121,7 @@ namespace SalesManagerApp.FileIO
                     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
                     {
                         //引数のデータをCSVファイルに書き込む
-                        csv.WriteRecord(data);
+                        csv.WriteRecords(data);
 
                         //書き込み成功
                         is_success = true;
@@ -131,8 +130,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return is_success;

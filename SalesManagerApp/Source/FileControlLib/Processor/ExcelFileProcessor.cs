@@ -8,13 +8,15 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesManagerApp.FileIO
+namespace FileControlLib.Processor
 {
     /// <summary>
     /// Excelファイルを処理する具体クラス
     /// </summary>
     public class ExcelFileProcessor : IFileProcessor
     {
+        private const string SHEET_NAME = "Sheet1";
+
         /// <summary>
         /// Excelファイルを保存する
         /// </summary>
@@ -84,7 +86,7 @@ namespace SalesManagerApp.FileIO
                 using (var workbook = new XLWorkbook(filePath))
                 {
                     //ワークブックからシート情報を取得
-                    var worksheet = workbook.Worksheet("");
+                    var worksheet = workbook.Worksheet(SHEET_NAME);
 
                     //データが入力されている範囲を取得
                     var range = worksheet.RangeUsed();
@@ -170,8 +172,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return data;
@@ -192,10 +193,12 @@ namespace SalesManagerApp.FileIO
                 using (var workbook = new XLWorkbook())
                 {
                     //ワークブックに新しいシートを追加
-                    var worksheet = workbook.Worksheets.Add("Sheet1");
+                    var worksheet = workbook.Worksheets.Add(SHEET_NAME);
 
-                    //左上セルにデータを一括書き込み(プロパティ名も列名として書き込む)
-                    var range = worksheet.Cell(1, 1).InsertData(data, true);
+                    //左上セルにデータを一括書き込み
+                    var range = worksheet.Cell(1, 1).InsertTable(data);
+                    //テーブルデザインをデフォルトにする
+                    range.Theme = XLTableTheme.None;
 
                     //ヘッダー行を取得
                     var header_row = worksheet.Row(1);
@@ -214,8 +217,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return is_success;

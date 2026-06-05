@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesManagerApp.FileIO
+namespace FileControlLib
 {
     public interface IFileProcessor
     {
