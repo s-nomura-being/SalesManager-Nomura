@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SalesManagerApp.FileIO
+namespace FileControlLib.Processor
 {
     /// <summary>
     /// JSONファイルを処理する具体クラス
@@ -91,8 +91,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return data;
@@ -119,8 +118,7 @@ namespace SalesManagerApp.FileIO
             }
             catch (Exception e)
             {
-
-                throw;
+                Console.WriteLine($"Error:{e}");
             }
 
             return is_success;
