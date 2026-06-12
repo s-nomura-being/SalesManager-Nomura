@@ -85,11 +85,15 @@ namespace SalesManagerApp.DBControl
                 //挿入か更新か判定する
                 if (true == CheckUpdateStoreMaster(storeMaster))
                 {
+                    //更新日時セット
+                    storeMaster.Updated_at = DateTime.Now;
                     //店舗マスタを更新
                     result = _controller.UpdateRecord(storeMaster, storeMaster.Id);
                 }
                 else
                 {
+                    //作成日時セット
+                    storeMaster.Created_at = DateTime.Now;
                     //店舗マスタを挿入
                     result = _controller.InsertRecord(storeMaster);
                 }
@@ -139,7 +143,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //IDが一致するレコードがあるかチェックする
-                var storeMasters = _controller.SelectRecord<StoreMaster>(data => data.Id != storeMaster.Id);
+                var storeMasters = _controller.SelectRecord<StoreMaster>(data => data.Id == storeMaster.Id);
                 //一致するレコードがあれば更新、なければ挿入
                 update = storeMasters.ToList().Count > 0;
             }

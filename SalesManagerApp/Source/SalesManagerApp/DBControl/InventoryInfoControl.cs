@@ -108,7 +108,12 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //在庫情報データを全て取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
-                inventoryinfoList = _controller.SelectRecord<InventoryInfo>().Include(data => data.Store).Include(data => data.Product).ToList();
+                inventoryinfoList = _controller.SelectRecord<InventoryInfo>()
+                                                .Include(data => data.Store)
+                                                .Include(data => data.Product)
+                                                .Include(data => data.Product.Category)
+                                                .Include(data => data.Product.SalesResults)
+                                                .ToList();
                 result = true;
             }
             catch (Exception e)
@@ -133,7 +138,45 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //条件と一致する在庫情報データを取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
-                inventoryinfoList = _controller.SelectRecord(condition).Include(data => data.Store).Include(data => data.Product).ToList();
+                inventoryinfoList = _controller.SelectRecord(condition)
+                                                .Include(data => data.Store)
+                                                .Include(data => data.Product)
+                                                .Include(data => data.Product.Category)
+                                                .Include(data => data.Product.SalesResults)
+                                                .ToList();
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 条件に一致する在庫情報取得
+        /// </summary>
+        /// <param name="filter">フィルター情報</param>
+        /// <param name="inventoryinfoList"></param>
+        /// <returns></returns>
+        public bool GetInventoryInfo(FilterInfo filter, out List<InventoryInfo> inventoryinfoList)
+        {
+            bool result = false;
+            inventoryinfoList = new List<InventoryInfo>();
+
+            try
+            {
+                //ベースとなるIQueryableを取得
+                var query = _controller.SelectRecord<InventoryInfo>();
+                //フィルター情報を適用
+                query = query.CreateInventoryFilter(filter);
+                //条件と一致する在庫情報データを取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
+                inventoryinfoList = query.Include(data => data.Store)
+                                            .Include(data => data.Product)
+                                            .Include(data => data.Product.Category)
+                                            .Include(data => data.Product.SalesResults)
+                                            .ToList();
                 result = true;
             }
             catch (Exception e)

@@ -14,6 +14,9 @@ namespace SalesManagerApp.Data
     /// </summary>
     public class MainViewDataManager
     {
+        private const string NOTICE_TXT_MUST = "要発注";
+        private const string NOTICE_TXT_LOW = "在庫が少ない";
+
         /// <summary>商品マスタコントロール</summary>
         private ProductMasterControl _productctrl;
 
@@ -90,6 +93,9 @@ namespace SalesManagerApp.Data
                     //1行分のデータ用オブジェクト作成
                     LastWeekProductSalesData lastweekdata = new LastWeekProductSalesData();
 
+                    //商品ID
+                    lastweekdata.ProductID = product.Id;
+
                     //商品名
                     lastweekdata.ProductName = product.Name;
 
@@ -112,7 +118,8 @@ namespace SalesManagerApp.Data
                 throw;
             }
 
-            return lst_lastweekdata;
+            //ID、販売数が多い順
+            return lst_lastweekdata.OrderBy(data => data.ProductID).ThenByDescending(data => data.LastWeekSales).ToList();
         }
 
         /// <summary>
@@ -146,8 +153,10 @@ namespace SalesManagerApp.Data
                     stockstate.AfterStock = totalsalescount;
 
                     //発注通知
-                    //TODO：発注タイミングを設定ファイルから取得
-                    stockstate.Notice = stockstate.Stock <= 5 ? "発注！" : "";
+                    stockstate.Notice = GetNoticeString(stockstate.AfterStock);
+
+                    //在庫状況
+                    stockstate.StatusType = GetNoticeType(stockstate.AfterStock);
 
                     //作成した先週実績データをリストに追加
                     lst_stockstate.Add(stockstate);
@@ -159,7 +168,70 @@ namespace SalesManagerApp.Data
                 throw;
             }
 
-            return lst_stockstate;
+            //発注通知あり、販売後在庫数が少ない順
+            return lst_stockstate.OrderByDescending(data => data.Notice).ThenBy(data => data.AfterStock).ToList();
+        }
+
+        /// <summary>
+        /// 発注通知判定 文字列作成
+        /// </summary>
+        /// <param name="stock">現在の在庫数</param>
+        /// <returns>発注通知テキスト</returns>
+        private string GetNoticeString(int stock)
+        {
+            //発注通知テキスト
+            string notice_text = string.Empty;
+
+            //設定値：要発注の値を取得、比較
+            if (Properties.Settings.Default.NoticeCount_Must >= stock)
+            {
+                //要発注テキスト
+                notice_text = NOTICE_TXT_MUST;
+            }
+            //設定値：在庫少の値を取得、比較
+            else if (Properties.Settings.Default.NoticeCount_Low >= stock)
+            {
+                //在庫少テキスト
+                notice_text = NOTICE_TXT_LOW;
+            }
+            else
+            {
+                //通常通り
+                notice_text = string.Empty;
+            }
+
+            return notice_text;
+        }
+
+        /// <summary>
+        /// 発注通知判定 在庫状況設定
+        /// </summary>
+        /// <param name="stock">現在の在庫数</param>
+        /// <returns>在庫状況</returns>
+        private E_StockStatusType GetNoticeType(int stock)
+        {
+            //在庫状況
+            var notice_type = E_StockStatusType.None;
+
+            //設定値：要発注の値を取得、比較
+            if (Properties.Settings.Default.NoticeCount_Must >= stock)
+            {
+                //要発注状態
+                notice_type = E_StockStatusType.Must;
+            }
+            //設定値：在庫少の値を取得、比較
+            else if (Properties.Settings.Default.NoticeCount_Low >= stock)
+            {
+                //在庫少状態
+                notice_type = E_StockStatusType.Low;
+            }
+            else
+            {
+                //通常状態
+                notice_type = E_StockStatusType.None;
+            }
+
+            return notice_type;
         }
     }
 }

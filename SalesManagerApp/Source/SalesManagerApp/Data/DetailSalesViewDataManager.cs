@@ -27,35 +27,57 @@ namespace SalesManagerApp.Data
         }
 
         /// <summary>
+        /// 各マスタ名称取得
+        /// </summary>
+        /// <param name="lst_store">店舗名リスト</param>
+        /// <param name="lst_product">商品名リスト</param>
+        /// <param name="lst_category">区分名リスト</param>
+        /// <returns>成功した場合はtrue、それ以外はfalse</returns>
+        public bool GetNameData(out List<string> lst_store, out List<string> lst_product, out List<string> lst_category)
+        {
+            bool result = false;
+
+            lst_store = new List<string>();
+            lst_product = new List<string>();
+            lst_category = new List<string>();
+
+            try
+            {
+                //売上データ保持用リスト
+                List<SalesResult> lst_salses = new List<SalesResult>();
+                //売上データを取得する
+                _salesresultctrl.GetSalesResult(out lst_salses);
+
+                //データから店舗名、商品名、区分名を抜き出す(重複抜き)
+                lst_store = lst_salses.Select(data => data.Store.Name).Distinct().ToList();
+                lst_product = lst_salses.Select(data => data.Product.Name).Distinct().ToList();
+                lst_category = lst_salses.Select(data => data.Product.Category.Category).Distinct().ToList();
+
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// 売上販売実績一覧画面データ取得
         /// </summary>
         /// <param name="lst_detaildata">売上詳細一覧データリスト</param>
         /// <param name="filter_setting">絞り込み条件オブジェクト</param>
         /// <returns>成功した場合はtrue、それ以外はfalse</returns>
-        public bool GetDetailSalesViewData(out List<DetailSalesData> lst_detaildata, object filter_setting = null)
+        public bool GetDetailSalesViewData(out List<DetailSalesData> lst_detaildata, FilterInfo? filter)
         {
             bool result = false;
             lst_detaildata = new List<DetailSalesData>();
 
             try
             {
-                //絞り込み条件がある場合、条件設定
-                if(null != filter_setting)
-                {
-                    //絞り込み条件データから条件式を作成する
-                    //TODO：絞り込み条件の取得
-                    Expression<Func<SalesResult, bool>> filter = null;
-                    //filter = data => data.StoreId == 5;
-
-                    //条件と一致する売上詳細一覧データを作成する
-                    lst_detaildata = CreateDetailSalesData(filter);
-                }
-                else
-                {
-                    //売上詳細一覧データを作成する
-                    lst_detaildata = CreateDetailSalesData();
-                }
-
+                //売上詳細一覧データを作成する
+                lst_detaildata = CreateDetailSalesData(filter);
                 result = true;
             }
             catch (Exception e)
@@ -71,7 +93,7 @@ namespace SalesManagerApp.Data
         /// </summary>
         /// <param name="filter">絞り込み条件</param>
         /// <returns>売上詳細一覧データ</returns>
-        private List<DetailSalesData> CreateDetailSalesData(Expression<Func<SalesResult, bool>> filter = null)
+        private List<DetailSalesData> CreateDetailSalesData(FilterInfo? filter)
         {
             //データ作成用リスト
             List<DetailSalesData> lst_details = new List<DetailSalesData>();
@@ -126,7 +148,8 @@ namespace SalesManagerApp.Data
                 Console.WriteLine($"Error: {e}");
             }
 
-            return lst_details;
+            //日付順
+            return lst_details.OrderBy(data=>data.SalesDate).ToList();
         }
     }
 }

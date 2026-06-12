@@ -139,7 +139,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //IDが一致するレコードがあるかチェックする
-                var categoryMasters = _controller.SelectRecord<CategoryMaster>(data => data.Id != categoryMaster.Id);
+                var categoryMasters = _controller.SelectRecord<CategoryMaster>(data => data.Id == categoryMaster.Id);
                 //一致するレコードがあれば更新、なければ挿入
                 update = categoryMasters.ToList().Count > 0;
             }

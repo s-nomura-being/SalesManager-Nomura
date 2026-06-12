@@ -112,6 +112,7 @@ namespace SalesManagerApp.DBControl
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
                                                 .Include(data => data.Store)
+                                                .OrderBy(data => data.SaleDate)
                                                 .ToList();
                 result = true;
             }
@@ -126,8 +127,8 @@ namespace SalesManagerApp.DBControl
         /// <summary>
         /// 条件に一致する販売実績取得
         /// </summary>
-        /// <param name="condition"></param>
-        /// <param name="salesresultList"></param>
+        /// <param name="condition">条件式</param>
+        /// <param name="salesresultList">販売実績データリスト</param>
         /// <returns></returns>
         public bool GetSalesResult(Expression<Func<SalesResult, bool>> condition, out List<SalesResult> salesresultList)
         {
@@ -141,6 +142,7 @@ namespace SalesManagerApp.DBControl
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
                                                 .Include(data => data.Store)
+                                                .OrderBy(data => data.SaleDate)
                                                 .ToList();
                 result = true;
             }
@@ -152,6 +154,40 @@ namespace SalesManagerApp.DBControl
             return result;
         }
 
+        /// <summary>
+        /// 条件に一致する販売実績取得
+        /// </summary>
+        /// <param name="filter">フィルター情報</param>
+        /// <param name="salesresultList">販売実績データリスト</param>
+        /// <returns></returns>
+        public bool GetSalesResult(FilterInfo filter, out List<SalesResult> salesresultList)
+        {
+            bool result = false;
+            salesresultList = new List<SalesResult>();
+
+            try
+            {
+                //ベースとなるIQueryableを取得
+                var query = _controller.SelectRecord<SalesResult>();
+                //フィルター情報を適用
+                query = query.CreateSalesFilter(filter);
+                //条件と一致する販売実績データを取得する(店舗ID、商品IDから店舗マスタ、商品マスタも同時に取得)
+                salesresultList = query.Include(data => data.Product)
+                                        .Include(data => data.Product.Category)
+                                        .Include(data => data.Store)
+                                        .OrderBy(data => data.SaleDate)
+                                        .ToList();
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+
+            return result;
+        }
+
+
         public bool GetSalesResult(DateTime start_date, DateTime end_date,  out List<SalesResult> salesresultList)
         {
             bool result = false;
@@ -159,7 +195,12 @@ namespace SalesManagerApp.DBControl
 
             try
             {
-                salesresultList = _controller.SelectRecord<SalesResult>(data => data.SaleDate >= start_date && data.SaleDate <= end_date).ToList();
+                salesresultList = _controller.SelectRecord<SalesResult>(data => data.SaleDate >= start_date && data.SaleDate <= end_date)
+                                        .Include(data => data.Product)
+                                        .Include(data => data.Product.Category)
+                                        .Include(data => data.Store)
+                                        .OrderBy(data => data.SaleDate)
+                                        .ToList();
             }
             catch (Exception e)
             {
