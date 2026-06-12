@@ -6,7 +6,7 @@
       <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="NoticeCount_Low" Description="発注通知しきい値-在庫少" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
+      <Value Profile="(Default)">50</Value>
     </Setting>
     <Setting Name="AutoRead" Description="csv自動読み取り" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

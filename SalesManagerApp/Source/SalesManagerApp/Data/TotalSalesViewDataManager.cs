@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 using SalesManagerApp.DBControl;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,11 +18,11 @@ namespace SalesManagerApp.Data
         /// <summary>全期間</summary>
         None = 0,
         /// <summary>週間</summary>
-        Week,
+        Weekly,
         /// <summary>月間</summary>
-        Month,
+        Monthly,
         /// <summary>年間</summary>
-        Year,
+        Yearly,
     }
 
     /// <summary>
@@ -49,7 +50,7 @@ namespace SalesManagerApp.Data
         /// <param name="end_dt">集計終了日時</param>
         /// <param name="lst_totalsalesdata">売上集計データリスト</param>
         /// <returns>成功した場合はtrue、それ以外はfalse</returns>
-        public bool GetTotalSalesViewData(E_Period e_period, DateTime start_dt, DateTime end_dt, out List<TotalSalesData> lst_totalsalesdata)
+        public bool GetTotalSalesViewData(E_Period e_period, out List<TotalSalesData> lst_totalsalesdata)
         {
             bool result = false;
             lst_totalsalesdata = new List<TotalSalesData>();
@@ -65,21 +66,21 @@ namespace SalesManagerApp.Data
                         break;
 
                     //週間
-                    case E_Period.Week:
+                    case E_Period.Weekly:
                         //週間売上集計データ作成
-                        lst_totalsalesdata = CreateWeekTotalSalesData(start_dt.Year, start_dt.Month);
+                        lst_totalsalesdata = CreateWeekTotalSalesData();
                         break;
 
                     //月間
-                    case E_Period.Month:
+                    case E_Period.Monthly:
                         //月間売上集計データ作成
-                        lst_totalsalesdata = CreateMonthTotalSalesData(start_dt.Year);
+                        lst_totalsalesdata = CreateMonthTotalSalesData();
                         break;
 
                     //年間
-                    case E_Period.Year:
+                    case E_Period.Yearly:
                         //年間売上集計データ作成
-                        lst_totalsalesdata = CreateYearTotalSalesData(start_dt.Year, end_dt.Year);
+                        lst_totalsalesdata = CreateYearTotalSalesData();
                         break;
 
                     default:
@@ -97,10 +98,8 @@ namespace SalesManagerApp.Data
         /// <summary>
         /// 年間売上集計データ作成
         /// </summary>
-        /// <param name="start_year">集計開始年</param>
-        /// <param name="end_year">集計終了年</param>
         /// <returns>年間売上集計データ</returns>
-        private List<TotalSalesData> CreateYearTotalSalesData(int start_year, int end_year)
+        private List<TotalSalesData> CreateYearTotalSalesData()
         {
             //データ作成用リスト
             List<TotalSalesData> lst_totalsales = new List<TotalSalesData>();
@@ -109,19 +108,22 @@ namespace SalesManagerApp.Data
             {
                 //販売実績データ保持用リスト
                 List<SalesResult> lst_results = new List<SalesResult>();
-                //集計開始年(1/1)～終了年(12/31 11:59:59)までの販売実績データを取得する
-                _salesresultctrl.GetSalesResult(new DateTime(start_year, 1, 1), new DateTime(end_year, 12, 31, 23, 59, 59), out lst_results);
+
+                //販売実績データを取得する
+                _salesresultctrl.GetSalesResult(out lst_results);
 
                 //取得した販売実績データを「年単位でグループ化」、「販売数と売上金額を合計し集計データ作成」、「期間列を基準に昇順並べ替え」
                 lst_totalsales = lst_results.GroupBy(data => data.SaleDate.Year)
                                             .Select(group => new TotalSalesData()
                                             {
+                                                StartDate = new DateTime(group.Key,1,1),
+                                                EndDate = new DateTime(group.Key, 12, 31, 23, 59, 59),
                                                 Period = $"{group.Key}年",
                                                 DataCount = group.Count(),
                                                 TotalSalesCount = group.Sum(group_data => group_data.Quantity),
                                                 TotalSales = group.Sum(group_data => group_data.SalesAmount),
                                             })
-                                            .OrderBy(data => data.Period)
+                                            .OrderBy(data => data.StartDate)
                                             .ToList();
             }
             catch (Exception e)
@@ -135,9 +137,8 @@ namespace SalesManagerApp.Data
         /// <summary>
         /// 指定年の月間売上集計データ作成
         /// </summary>
-        /// <param name="target_year">集計対象年</param>
         /// <returns>月間売上集計データ</returns>
-        private List<TotalSalesData> CreateMonthTotalSalesData(int target_year)
+        private List<TotalSalesData> CreateMonthTotalSalesData()
         {
             //データ作成用リスト
             List<TotalSalesData> lst_totalsales = new List<TotalSalesData>();
@@ -147,40 +148,36 @@ namespace SalesManagerApp.Data
                 //販売実績データ保持用リスト
                 List<SalesResult> lst_results = new List<SalesResult>();
 
-                //指定年の集計開始日時(1/1)～終了日時(12/31 11:59:59)を作成する
-                DateTime start = new DateTime(target_year, 1, 1);
-                DateTime end = new DateTime(target_year, 12, 31, 23, 59, 59);
-                
-                //指定年の販売実績データを取得する
-                _salesresultctrl.GetSalesResult(start, end, out lst_results);
+                //販売実績データを取得する
+                _salesresultctrl.GetSalesResult(out lst_results);
 
                 //取得した販売実績データを「月単位でグループ化」、「販売数と売上金額を合計し集計データ作成」、「期間列を基準に昇順並べ替え」
-                lst_totalsales = lst_results.GroupBy(data => data.SaleDate.Month)
+                lst_totalsales = lst_results.GroupBy(data => new { data.SaleDate.Year, data.SaleDate.Month })
                                             .Select(group => new TotalSalesData()
                                             {
-                                                Period = $"{target_year}年{group.Key}月",
+                                                StartDate = new DateTime(group.Key.Year, group.Key.Month, 1),
+                                                EndDate = new DateTime(group.Key.Year, group.Key.Month, DateTime.DaysInMonth(group.Key.Year, group.Key.Month), 23, 59, 59),
+                                                Period = $"{group.Key.Year}年{group.Key.Month}月",
                                                 DataCount = group.Count(),
                                                 TotalSalesCount = group.Sum(group_data => group_data.Quantity),
                                                 TotalSales = group.Sum(group_data => group_data.SalesAmount),
                                             })
-                                            .OrderBy(data => data.Period)
+                                            .OrderBy(data => data.StartDate)
                                             .ToList();
             }
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e}");
             }
-
+            
             return lst_totalsales;
         }
 
         /// <summary>
         /// 指定年月の週間売上集計データ作成
         /// </summary>
-        /// <param name="target_year">集計対象年</param>
-        /// <param name="target_month">集計対象月</param>
         /// <returns>週間売上集計データ</returns>
-        private List<TotalSalesData> CreateWeekTotalSalesData(int target_year, int target_month)
+        private List<TotalSalesData> CreateWeekTotalSalesData()
         {
             //データ作成用リスト
             List<TotalSalesData> lst_totalsales = new List<TotalSalesData>();
@@ -190,26 +187,15 @@ namespace SalesManagerApp.Data
                 //販売実績データ保持用リスト
                 List<SalesResult> lst_results = new List<SalesResult>();
 
-                //指定年月から、月始まりの日付を作成
-                DateTime month_firstday = new DateTime(target_year, target_month, 1);
-                
-                //指定年月から、月の最終日を取得
-                int day_in_month = DateTime.DaysInMonth(target_year, target_month);
-                //指定年月・最終日から、月終わりの日付を作成
-                DateTime month_endday = new DateTime(target_year, target_month, day_in_month, 23, 59, 59);
-
-                //月始まりの日付から、週始まり(月曜日)の日付を算出
-                DateTime first_month_week = GetStartOfWeek(month_firstday);
-                //月終わりの日付から、週終わり(日曜日)の日付を算出
-                DateTime end_month_week = GetEndOfWeek(month_endday);
-
-                //月始まり週～月終わり週の販売実績データを取得する
-                _salesresultctrl.GetSalesResult(first_month_week, end_month_week, out lst_results);
+                //販売実績データを取得する
+                _salesresultctrl.GetSalesResult(out lst_results);
 
                 //取得した販売実績データを「週単位でグループ化」、「販売数と売上金額を合計し集計データ作成」、「期間列を基準に昇順並べ替え」
                 lst_totalsales = lst_results.GroupBy(data => GetStartOfWeek(data.SaleDate))
                                             .Select(group => new TotalSalesData()
                                             {
+                                                StartDate = group.Key,
+                                                EndDate = GetEndOfWeek(group.Key),
                                                 Period = $"{group.Key:yyyy/MM/dd}の週",
                                                 DataCount = group.Count(),
                                                 TotalSalesCount = group.Sum(group_data => group_data.Quantity),

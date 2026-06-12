@@ -140,7 +140,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //IDが一致するレコードがあるかチェックする
-                var productMasters = _controller.SelectRecord<ProductMaster>(data => data.Id != productMaster.Id);
+                var productMasters = _controller.SelectRecord<ProductMaster>(data => data.Id == productMaster.Id);
                 //一致するレコードがあれば更新、なければ挿入
                 update = productMasters.ToList().Count > 0;
             }

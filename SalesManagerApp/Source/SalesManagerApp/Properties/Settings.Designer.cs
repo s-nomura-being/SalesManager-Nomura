@@ -45,7 +45,7 @@ namespace SalesManagerApp.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("発注通知しきい値-在庫少")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
         public int NoticeCount_Low {
             get {
                 return ((int)(this["NoticeCount_Low"]));

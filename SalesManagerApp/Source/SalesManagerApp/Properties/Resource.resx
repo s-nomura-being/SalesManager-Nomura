@@ -1,0 +1,226 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+		Microsoft ResX Schema
+
+		Version 1.3
+
+		The primary goals of this format is to allow a simple XML format 
+		that is mostly human readable. The generation and parsing of the 
+		various data types are done through the TypeConverter classes 
+		associated with the data types.
+
+		Example:
+
+		... ado.net/XML headers & schema ...
+		<resheader name="resmimetype">text/microsoft-resx</resheader>
+		<resheader name="version">1.3</resheader>
+		<resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+		<resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+		<data name="Name1">this is my long string</data>
+		<data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+		<data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+			[base64 mime encoded serialized .NET Framework object]
+		</data>
+		<data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+			[base64 mime encoded string representing a byte array form of the .NET Framework object]
+		</data>
+
+		There are any number of "resheader" rows that contain simple 
+		name/value pairs.
+
+		Each data row contains a name, and value. The row also contains a 
+		type or mimetype. Type corresponds to a .NET class that support 
+		text/value conversion through the TypeConverter architecture. 
+		Classes that don't support this are serialized and stored with the 
+		mimetype set.
+
+		The mimetype is used for serialized objects, and tells the 
+		ResXResourceReader how to depersist the object. This is currently not 
+		extensible. For a given mimetype the value must be set accordingly:
+
+		Note - application/x-microsoft.net.object.binary.base64 is the format 
+		that the ResXResourceWriter will generate, however the reader can 
+		read any of the formats listed below.
+
+		mimetype: application/x-microsoft.net.object.binary.base64
+		value   : The object must be serialized with 
+			: System.Serialization.Formatters.Binary.BinaryFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.soap.base64
+		value   : The object must be serialized with 
+			: System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+			: and then encoded with base64 encoding.
+
+		mimetype: application/x-microsoft.net.object.bytearray.base64
+		value   : The object must be serialized into a byte array 
+			: using a System.ComponentModel.TypeConverter
+			: and then encoded with base64 encoding.
+	-->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>1.3</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.3500.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="test" xml:space="preserve">
+    <value>これはテストです。</value>
+    <comment>テスト用</comment>
+  </data>
+  <data name="MSG-001" xml:space="preserve">
+    <value>商品情報の読み込みに失敗しました。
+ファイル[product.csv]が見つかりません。
+以下の場所にファイルが保存されているか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-002" xml:space="preserve">
+    <value>商品情報の読み込みに失敗しました。
+ファイル[product.csv]が破損しています。
+ファイルの内容が正しいか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-003" xml:space="preserve">
+    <value>商品情報の読み込みに失敗しました。
+システム管理者へ連絡してください。</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-004" xml:space="preserve">
+    <value>在庫一覧情報の読み込みに失敗しました。
+ファイル[inventory.csv]が見つかりません。
+以下の場所にファイルが保存されているか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-005" xml:space="preserve">
+    <value>在庫一覧情報の読み込みに失敗しました。
+ファイル[inventory.csv]が破損しています。
+ファイルの内容が正しいか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-006" xml:space="preserve">
+    <value>在庫一覧情報の読み込みに失敗しました。
+システム管理者へ連絡してください。</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-007" xml:space="preserve">
+    <value>販売実績情報の読み込みに失敗しました。
+ファイル[sales_yyyyMMdd.csv]が見つかりません。
+以下の場所にファイルが保存されているか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-008" xml:space="preserve">
+    <value>販売実績情報の読み込みに失敗しました。
+ファイル[sales_yyyyMMdd.csv]が破損しています。
+ファイルの内容が正しいか確認してください。
+{Path}</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-009" xml:space="preserve">
+    <value>販売実績情報の読み込みに失敗しました。
+システム管理者へ連絡してください。</value>
+    <comment>アプリ起動時
+手動読み込み時</comment>
+  </data>
+  <data name="MSG-010" xml:space="preserve">
+    <value>データの集計に失敗しました。</value>
+    <comment>集計実行時</comment>
+  </data>
+  <data name="MSG-011" xml:space="preserve">
+    <value>集計一覧の出力に失敗しました。</value>
+    <comment>集計一覧出力時</comment>
+  </data>
+  <data name="MSG-012" xml:space="preserve">
+    <value>詳細表示に失敗しました。</value>
+    <comment>詳細表示実行時</comment>
+  </data>
+  <data name="MSG-013" xml:space="preserve">
+    <value>該当するデータが見つかりません。</value>
+    <comment>絞り込み検索適用時</comment>
+  </data>
+  <data name="MSG-014" xml:space="preserve">
+    <value>売上販売実績一覧の出力に失敗しました。</value>
+    <comment>実績一覧出力時</comment>
+  </data>
+  <data name="MSG-015" xml:space="preserve">
+    <value>在庫一覧の取得に失敗しました。</value>
+    <comment>在庫情報確認画面表示時</comment>
+  </data>
+  <data name="MSG-016" xml:space="preserve">
+    <value>在庫一覧の出力に失敗しました。</value>
+    <comment>在庫情報出力時</comment>
+  </data>
+  <data name="MSG-017" xml:space="preserve">
+    <value>店舗/商品/区分マスタの取得に失敗しました。</value>
+    <comment>マスタ編集画面表示時</comment>
+  </data>
+  <data name="MSG-018" xml:space="preserve">
+    <value>店舗名/商品名/区分名が重複しています。</value>
+    <comment>マスタ保存実行時</comment>
+  </data>
+  <data name="MSG-019" xml:space="preserve">
+    <value>マスタの保存に失敗しました。</value>
+    <comment>マスタ保存実行時</comment>
+  </data>
+  <data name="MSG-020" xml:space="preserve">
+    <value>設定情報の取得に失敗しました。
+システム管理者へ連絡してください。</value>
+    <comment>アプリ起動時
+アプリ設定画面表示時</comment>
+  </data>
+  <data name="MSG-021" xml:space="preserve">
+    <value>設定の保存に失敗しました。</value>
+    <comment>設定保存実行時</comment>
+  </data>
+  <data name="MSG-022" xml:space="preserve">
+    <value>区分マスタデータがありません。
+区分登録から行ってください。</value>
+    <comment>商品マスタ表示時
+区分情報なし</comment>
+  </data>
+</root>
