@@ -138,9 +138,9 @@ namespace DatabaseLib
         /// </summary>
         /// <typeparam name="T">テーブルクラス型</typeparam>
         /// <param name="update_data">更新するデータ</param>
-        /// <param name="id">更新対象のキー</param>
+        /// <param name="ids">更新対象のキー</param>
         /// <returns>T:成功 F:失敗</returns>
-        public bool UpdateRecord<T>(T update_data, int id) where T : class
+        public bool UpdateRecord<T>(T update_data, params int[] ids) where T : class
         {
             bool result = false;
 
@@ -148,7 +148,7 @@ namespace DatabaseLib
             {
                 //更新対象のレコードを取得
                 //Find()でEFCoreが自動的に主キーから検索してくれる
-                T? target_data = Set<T>().Find(id);
+                T? target_data = Set<T>().Find(ids);
 
                 if(null != target_data)
                 {

@@ -37,7 +37,7 @@ namespace SalesManagerApp.DBControl
         /// <returns>成功した場合はtrue、それ以外はfalse</returns>
         public bool SetStoreMaster(List<StoreMaster> storeMasters)
         {
-            bool result = false;
+            bool result = true;
 
             try
             {

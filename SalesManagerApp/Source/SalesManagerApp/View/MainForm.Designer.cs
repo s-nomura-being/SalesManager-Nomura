@@ -54,6 +54,7 @@
             this.btn_InventoryInfo = new Button();
             this.btn_MasterSetting = new Button();
             this.btn_AppSetting = new Button();
+            this.btn_ReadCSV = new Button();
             ((System.ComponentModel.ISupportInitialize)this.dgv_LastWeekSales).BeginInit();
             ((System.ComponentModel.ISupportInitialize)this.lastWeekProductSalesDataBindingSource).BeginInit();
             ((System.ComponentModel.ISupportInitialize)this.dgv_InventoryStatus).BeginInit();
@@ -160,7 +161,7 @@
             // btn_TotalSales
             // 
             this.btn_TotalSales.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            this.btn_TotalSales.Location = new Point(1060, 59);
+            this.btn_TotalSales.Location = new Point(1060, 137);
             this.btn_TotalSales.Name = "btn_TotalSales";
             this.btn_TotalSales.Size = new Size(192, 72);
             this.btn_TotalSales.TabIndex = 4;
@@ -244,7 +245,7 @@
             // btn_InventoryInfo
             // 
             this.btn_InventoryInfo.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 128);
-            this.btn_InventoryInfo.Location = new Point(1060, 137);
+            this.btn_InventoryInfo.Location = new Point(1060, 215);
             this.btn_InventoryInfo.Name = "btn_InventoryInfo";
             this.btn_InventoryInfo.Size = new Size(192, 72);
             this.btn_InventoryInfo.TabIndex = 6;
@@ -274,12 +275,24 @@
             this.btn_AppSetting.UseVisualStyleBackColor = true;
             this.btn_AppSetting.Click += this.btn_AppSetting_Click;
             // 
+            // btn_ReadCSV
+            // 
+            this.btn_ReadCSV.Font = new Font("Yu Gothic UI", 21.75F, FontStyle.Regular, GraphicsUnit.Point, 128);
+            this.btn_ReadCSV.Location = new Point(1060, 59);
+            this.btn_ReadCSV.Name = "btn_ReadCSV";
+            this.btn_ReadCSV.Size = new Size(192, 72);
+            this.btn_ReadCSV.TabIndex = 9;
+            this.btn_ReadCSV.Text = "CSV読込";
+            this.btn_ReadCSV.UseVisualStyleBackColor = true;
+            this.btn_ReadCSV.Click += this.btn_ReadCSV_Click;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
             this.AutoScaleMode = AutoScaleMode.Font;
             this.AutoScroll = true;
             this.ClientSize = new Size(1264, 681);
+            this.Controls.Add(this.btn_ReadCSV);
             this.Controls.Add(this.btn_AppSetting);
             this.Controls.Add(this.btn_MasterSetting);
             this.Controls.Add(this.btn_InventoryInfo);
@@ -325,5 +338,6 @@
         private ToolStripMenuItem mn_ShowMasterSetting;
         private ToolStripMenuItem mn_ShowAppSetting;
         private BindingSource lastWeekProductSalesDataBindingSource;
+        private Button btn_ReadCSV;
     }
 }

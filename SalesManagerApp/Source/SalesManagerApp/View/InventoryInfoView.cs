@@ -1,7 +1,9 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.ExtendedProperties;
+using FileControlLib.Processor;
 using SalesManagerApp.Data;
 using SalesManagerApp.DBControl;
+using SalesManagerApp.FileIO;
 using SalesManagerApp.View.ViewControl;
 using System;
 using System.Collections.Generic;
@@ -64,11 +66,9 @@ namespace SalesManagerApp.View
             List<InventoryListData> lst_inventory = new List<InventoryListData>();
             //ヘッダーを作成するために、データをグリッドビューに表示する
             dgv_InventoryList.DataSource = lst_inventory;
-            //行、列幅自動調整
-            dgv_InventoryList.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dgv_InventoryList.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-            //[累計売上金額]列を余剰分引き伸ばし
-            dgv_InventoryList.Columns[nameof(InventoryListData.ProductName)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            //グリッドビュー設定初期化
+            dgv_InventoryList.Init(nameof(InventoryListData.ProductName));
+            dgv_InventoryList.ApplyFormatAttributes<InventoryListData>();
             #endregion
         }
 
@@ -110,7 +110,8 @@ namespace SalesManagerApp.View
         /// <param name="e"></param>
         private void btn_Output_Click(object sender, EventArgs e)
         {
-
+            //出力処理
+            Output();
         }
 
         /// <summary>
@@ -120,16 +121,28 @@ namespace SalesManagerApp.View
         /// <param name="e"></param>
         private void mn_Output_Click(object sender, EventArgs e)
         {
-
+            //出力処理
+            Output();
         }
 
         private void Output()
         {
             //ファイルダイアログ表示
-            string sales_path = SelectOutputDir();
+            string inventory_path = SelectOutputDir();
 
             //ファイル読込命令
-
+            if (false == string.IsNullOrEmpty(inventory_path))
+            {
+                //ファイル読込命令
+                if (true == SaveList(inventory_path))
+                {
+                    MessageBox.Show($"ファイル保存成功");
+                }
+                else
+                {
+                    MessageBox.Show($"ファイル保存失敗", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         /// <summary>
@@ -160,6 +173,34 @@ namespace SalesManagerApp.View
             }
 
             return select_path;
+        }
+
+        /// <summary>
+        /// 一覧データ保存
+        /// </summary>
+        /// <param name="path">保存先パス</param>
+        /// <returns></returns>
+        private bool SaveList(string path)
+        {
+            bool result = false;
+
+            try
+            {
+                //グリッドに登録されているデータを取得
+                var list = dgv_InventoryList.DataSource as List<InventoryListData>;
+                if (null == list) return false;
+
+                //ファイル管理クラス生成
+                var file_manager = new InventoryInfoViewFileManager(new ExcelFileProcessor());
+                //データ保存
+                result = file_manager.SaveFile(path, list);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+            }
+
+            return result;
         }
 
         /// <summary>

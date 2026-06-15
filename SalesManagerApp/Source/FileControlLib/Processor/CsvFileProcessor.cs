@@ -15,6 +15,9 @@ namespace FileControlLib.Processor
     /// </summary>
     public class CsvFileProcessor : IFileProcessor
     {
+        /// <summary>拡張子</summary>
+        public string Extension { get; } = ".csv";
+
         /// <summary>
         /// CSVファイルを保存する
         /// </summary>

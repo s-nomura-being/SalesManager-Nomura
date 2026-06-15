@@ -83,8 +83,16 @@ namespace SalesManagerApp.DBControl
                     return false;
                 }
 
-                //在庫情報を挿入
-                result = _controller.InsertRecord(inventoryinfo);
+                if(true == CheckUpdateInventory(inventoryinfo))
+                {
+                    //在庫情報を更新
+                    result = _controller.UpdateRecord(inventoryinfo, inventoryinfo.StoreId, inventoryinfo.ProductId);
+                }
+                else
+                {
+                    //在庫情報を挿入
+                    result = _controller.InsertRecord(inventoryinfo);
+                }
             }
             catch (Exception e)
             {
@@ -93,6 +101,30 @@ namespace SalesManagerApp.DBControl
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 挿入か、更新かチェック
+        /// </summary>
+        /// <param name="inventory">区分マスタデータ</param>
+        /// <returns>更新対象の場合はtrue、それ以外はfalse</returns>
+        private bool CheckUpdateInventory(InventoryInfo inventory)
+        {
+            bool update = false;
+
+            try
+            {
+                //IDが一致するレコードがあるかチェックする
+                var categoryMasters = _controller.SelectRecord<InventoryInfo>(data => data.StoreId == inventory.StoreId && data.ProductId == inventory.ProductId);
+                //一致するレコードがあれば更新、なければ挿入
+                update = categoryMasters.ToList().Count > 0;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error: {e.Message}");
+            }
+
+            return update;
         }
 
         /// <summary>
