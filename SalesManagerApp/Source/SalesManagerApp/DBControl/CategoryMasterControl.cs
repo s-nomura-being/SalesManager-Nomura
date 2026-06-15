@@ -1,5 +1,6 @@
 ﻿using DatabaseLib;
 using DatabaseLib.Table;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,7 +38,7 @@ namespace SalesManagerApp.DBControl
         /// <returns>成功した場合はtrue、それ以外はfalse</returns>
         public bool SetCategoryMaster(List<CategoryMaster> categoryMasters)
         {
-            bool result = false;
+            bool result = true;
 
             try
             {
@@ -164,7 +165,9 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //区分マスタデータを全て取得する
-                categoryMasterList = _controller.SelectRecord<CategoryMaster>().ToList();
+                categoryMasterList = _controller.SelectRecord<CategoryMaster>()
+                                                .Include(data => data.ProductMasters)
+                                                .ToList();
                 result = true;
             }
             catch (Exception e)
@@ -189,7 +192,9 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //条件と一致する区分マスタデータを取得する
-                categoryMasterList = _controller.SelectRecord(condition).ToList();
+                categoryMasterList = _controller.SelectRecord(condition)
+                                                .Include(data => data.ProductMasters)
+                                                .ToList();
                 result = true;
             }
             catch (Exception e)

@@ -13,6 +13,9 @@ namespace FileControlLib.Processor
     /// </summary>
     public class JsonFileProcessor : IFileProcessor
     {
+        /// <summary>拡張子</summary>
+        public string Extension { get; } = ".json";
+
         /// <summary>
         /// JSONファイルを保存する
         /// </summary>

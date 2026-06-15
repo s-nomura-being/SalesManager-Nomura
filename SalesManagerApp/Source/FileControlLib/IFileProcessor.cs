@@ -8,6 +8,9 @@ namespace FileControlLib
 {
     public interface IFileProcessor
     {
+        /// <summary>拡張子</summary>
+        string Extension { get; }
+
         /// <summary>
         /// ファイルを保存する
         /// </summary>

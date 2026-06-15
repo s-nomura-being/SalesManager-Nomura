@@ -40,28 +40,12 @@ namespace SalesManagerApp.Properties {
         }
         
         /// <summary>
-        /// 発注通知しきい値-在庫少
-        /// </summary>
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Configuration.SettingsDescriptionAttribute("発注通知しきい値-在庫少")]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("50")]
-        public int NoticeCount_Low {
-            get {
-                return ((int)(this["NoticeCount_Low"]));
-            }
-            set {
-                this["NoticeCount_Low"] = value;
-            }
-        }
-        
-        /// <summary>
         /// csv自動読み取り
         /// </summary>
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Configuration.SettingsDescriptionAttribute("csv自動読み取り")]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool AutoRead {
             get {
                 return ((bool)(this["AutoRead"]));
@@ -84,6 +68,22 @@ namespace SalesManagerApp.Properties {
             }
             set {
                 this["BackupPath"] = value;
+            }
+        }
+        
+        /// <summary>
+        /// 発注通知しきい値-在庫少
+        /// </summary>
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.SettingsDescriptionAttribute("発注通知しきい値-在庫少")]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int NoticeCount_Low {
+            get {
+                return ((int)(this["NoticeCount_Low"]));
+            }
+            set {
+                this["NoticeCount_Low"] = value;
             }
         }
     }

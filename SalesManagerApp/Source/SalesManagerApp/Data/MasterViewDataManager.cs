@@ -91,7 +91,7 @@ namespace SalesManagerApp.Data
                 }
 
                 //テーブルデータを登録
-                _storectrl.SetStoreMaster(lst_master);
+                result = _storectrl.SetStoreMaster(lst_master);
             }
             catch (Exception e)
             {
@@ -164,7 +164,7 @@ namespace SalesManagerApp.Data
                 }
 
                 //テーブルデータを登録
-                _productctrl.SetProductMaster(lst_master);
+                result = _productctrl.SetProductMaster(lst_master);
             }
             catch (Exception e)
             {
@@ -234,7 +234,7 @@ namespace SalesManagerApp.Data
                 }
 
                 //テーブルデータを登録
-                _categoryctrl.SetCategoryMaster(lst_master);
+                result = _categoryctrl.SetCategoryMaster(lst_master);
             }
             catch (Exception e)
             {

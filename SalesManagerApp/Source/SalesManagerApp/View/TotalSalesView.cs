@@ -1,4 +1,6 @@
-﻿using SalesManagerApp.Data;
+﻿using FileControlLib.Processor;
+using SalesManagerApp.Data;
+using SalesManagerApp.FileIO;
 using SalesManagerApp.View.ViewControl;
 using System;
 using System.Collections.Generic;
@@ -61,13 +63,9 @@ namespace SalesManagerApp.View
             //取得したデータをグリッドビューに表示する
             dgv_TotalSales.DataSource = lst_total;
 
-            //グリッドビュー設定
-            //行、列幅自動調整
-            dgv_TotalSales.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
-            dgv_TotalSales.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.AllCells;
-
-            //[累計売上金額]列を余剰分引き伸ばし
-            dgv_TotalSales.Columns[nameof(TotalSalesData.TotalSales)].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            //グリッドビュー設定初期化
+            dgv_TotalSales.Init(nameof(TotalSalesData.TotalSales));
+            dgv_TotalSales.ApplyFormatAttributes<TotalSalesData>();
         }
 
         /// <summary>
@@ -154,19 +152,32 @@ namespace SalesManagerApp.View
             Output();
         }
 
+        /// <summary>
+        /// 一覧データファイル出力
+        /// </summary>
         private void Output()
         {
             //ファイルダイアログ表示
-            string sales_path = SelectOutputDir();
+            string totalsales_path = SelectOutputDir();
 
-            //ファイル読込命令
-
+            if (false == string.IsNullOrEmpty(totalsales_path))
+            {
+                //ファイル読込命令
+                if (true == SaveList(totalsales_path))
+                {
+                    MessageBox.Show($"ファイル保存成功");
+                }
+                else
+                {
+                    MessageBox.Show($"ファイル保存失敗", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
 
         /// <summary>
         /// ファイル出力先選択
         /// </summary>
-        /// <returns></returns>
+        /// <returns>保存先パス</returns>
         private string SelectOutputDir()
         {
             string select_path = string.Empty;
@@ -191,6 +202,34 @@ namespace SalesManagerApp.View
             }
 
             return select_path;
+        }
+
+        /// <summary>
+        /// 一覧データ保存
+        /// </summary>
+        /// <param name="path">保存先パス</param>
+        /// <returns></returns>
+        private bool SaveList(string path)
+        {
+            bool result = false;
+
+            try
+            {
+                //グリッドに登録されているデータを取得
+                var list = dgv_TotalSales.DataSource as List<TotalSalesData>;
+                if (null == list) return false;
+
+                //ファイル管理クラス生成
+                var file_manager = new TotalSalesViewFileManager(new ExcelFileProcessor());
+                //データ保存
+                result = file_manager.SaveFile(path, list);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+            }
+
+            return result;
         }
 
         /// <summary>

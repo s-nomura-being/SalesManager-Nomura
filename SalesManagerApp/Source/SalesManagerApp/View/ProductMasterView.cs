@@ -1,7 +1,9 @@
 ﻿using DocumentFormat.OpenXml.Drawing.Charts;
 using DocumentFormat.OpenXml.ExtendedProperties;
 using DocumentFormat.OpenXml.Wordprocessing;
+using FileControlLib.Processor;
 using SalesManagerApp.Data;
+using SalesManagerApp.FileIO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -147,10 +149,10 @@ namespace SalesManagerApp.View
 
             if (true == result)
             {
-                MessageBox.Show("Save");
-
                 //ファイル出力命令
+                Output();
 
+                MessageBox.Show("Save");
             }
             else
             {
@@ -233,6 +235,35 @@ namespace SalesManagerApp.View
                 e.Cancel = true;
                 return;
             }
+        }
+
+        /// <summary>
+        /// ファイル出力
+        /// </summary>
+        /// <returns></returns>
+        private bool Output()
+        {
+            bool result = false;
+
+            try
+            {
+                //グリッドに登録されているデータを取得
+                var list = dgv_ProductMaster.DataSource as BindingList<ProductMasterData>;
+                if (null == list) return false;
+
+                //ファイル保存処理
+                var file_manager = new ProductMasterViewFileManager(new ExcelFileProcessor());
+                file_manager.SaveFile(list.ToList());
+
+                result = true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+                throw;
+            }
+
+            return result;
         }
     }
 }

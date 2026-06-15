@@ -86,6 +86,7 @@
             this.label4.Size = new Size(218, 30);
             this.label4.TabIndex = 16;
             this.label4.Text = "自動データ読み取り設定";
+            this.label4.Visible = false;
             // 
             // label5
             // 
@@ -151,6 +152,7 @@
             this.cb_AutoRead.TabIndex = 24;
             this.cb_AutoRead.Text = "自動読み取り";
             this.cb_AutoRead.UseVisualStyleBackColor = true;
+            this.cb_AutoRead.Visible = false;
             // 
             // label8
             // 

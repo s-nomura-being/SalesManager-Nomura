@@ -5,14 +5,14 @@
     <Setting Name="NoticeCount_Must" Description="発注通知しきい値-要発注" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5</Value>
     </Setting>
-    <Setting Name="NoticeCount_Low" Description="発注通知しきい値-在庫少" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">50</Value>
-    </Setting>
     <Setting Name="AutoRead" Description="csv自動読み取り" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="BackupPath" Description="バックアップファイル保存先" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\\SalesManagerApp\Backup</Value>
+    </Setting>
+    <Setting Name="NoticeCount_Low" Description="発注通知しきい値-在庫少" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
     </Setting>
   </Settings>
 </SettingsFile>

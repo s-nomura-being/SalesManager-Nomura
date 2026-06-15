@@ -1,4 +1,7 @@
+using DatabaseLib.Table;
+using FileControlLib.Processor;
 using SalesManagerApp.Data;
+using SalesManagerApp.FileIO;
 using SalesManagerApp.View.ViewControl;
 using System;
 using System.Collections.Generic;
@@ -8,6 +11,7 @@ using System.Drawing;
 using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -18,6 +22,15 @@ namespace SalesManagerApp.View
     /// </summary>
     public partial class MainForm : Form
     {
+        /// <summary>販売実績ファイル読込履歴ファイル</summary>
+        private const string SALES_READ_HISTORY = "imported_sales.txt";
+        /// <summary>商品マスタファイル</summary>
+        private const string PRODUCT_FILENAME = "products.csv";
+        /// <summary>在庫データファイル</summary>
+        private const string INVENTORY_FILENAME = "inventory.csv";
+        /// <summary>販売実績ファイル</summary>
+        private const string SALES_FILENAME = @"^sales_\d{8}\.csv$";
+
         /// <summary>データ管理オブジェクト</summary>
         MainViewDataManager _manager;
 
@@ -45,8 +58,6 @@ namespace SalesManagerApp.View
         /// <param name="e"></param>
         private void MainForm_Load(object sender, EventArgs e)
         {
-            //ファイル読込命令
-
             //表示用データ作成
             List<LastWeekProductSalesData> lst_Lastweekdata = new List<LastWeekProductSalesData>();
             List<StockStatusData> lst_stockdata = new List<StockStatusData>();
@@ -59,6 +70,8 @@ namespace SalesManagerApp.View
             //グリッドビュー設定初期化
             dgv_LastWeekSales.Init(nameof(LastWeekProductSalesData.ProductName));
             dgv_InventoryStatus.Init(nameof(StockStatusData.ProductName));
+            dgv_LastWeekSales.ApplyFormatAttributes<LastWeekProductSalesData>();
+            dgv_InventoryStatus.ApplyFormatAttributes<StockStatusData>();
         }
 
         /// <summary>
@@ -119,6 +132,52 @@ namespace SalesManagerApp.View
 
         #region ボタンイベント
         /// <summary>
+        /// CSV読込ボタン押下
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btn_ReadCSV_Click(object sender, EventArgs e)
+        {
+            //ファイルダイアログ表示
+            string csv_path = SearchAPIFile();
+            if (false == string.IsNullOrEmpty(csv_path))
+            {
+                bool issuccess = false;
+
+                //ファイル名のみにトリミング
+                string fileName = Path.GetFileName(csv_path).ToLower();
+
+                //ファイル名で分岐
+                if (fileName == PRODUCT_FILENAME)
+                {
+                    //データ登録
+                    issuccess = SetProductFileData(csv_path);
+                }
+                else if (fileName == INVENTORY_FILENAME)
+                {
+                    //データ登録
+                    issuccess = SetInventoryFileData(csv_path);
+                }
+                else if (Regex.IsMatch(fileName, SALES_FILENAME))
+                {
+                    //データ登録
+                    issuccess = SetSaleFileData(csv_path);
+                }
+                else
+                {
+                    Console.WriteLine($"Error:不明なファイル");
+                    MessageBox.Show($"{fileName}は読込対象外のファイル");
+                }
+
+                if(false == issuccess)
+                {
+                    Console.WriteLine($"Error:読込失敗");
+                    MessageBox.Show($"{fileName}の読込に失敗しました");
+                }
+            }
+        }
+
+        /// <summary>
         /// 売上集計ボタン押下
         /// </summary>
         /// <param name="sender"></param>
@@ -173,9 +232,11 @@ namespace SalesManagerApp.View
         {
             //ファイルダイアログ表示
             string product_path = SearchAPIFile();
-
-            //ファイル読込命令
-
+            if(false == string.IsNullOrEmpty(product_path))
+            {
+                //データ登録
+                SetProductFileData(product_path);
+            }
         }
 
         /// <summary>
@@ -187,9 +248,11 @@ namespace SalesManagerApp.View
         {
             //ファイルダイアログ表示
             string inventory_path = SearchAPIFile();
-
-            //ファイル読込命令
-
+            if (false == string.IsNullOrEmpty(inventory_path))
+            {
+                //データ登録
+                SetInventoryFileData(inventory_path);
+            }
         }
 
         /// <summary>
@@ -201,9 +264,11 @@ namespace SalesManagerApp.View
         {
             //ファイルダイアログ表示
             string sales_path = SearchAPIFile();
-
-            //ファイル読込命令
-
+            if (false == string.IsNullOrEmpty(sales_path))
+            {
+                //データ登録
+                SetSaleFileData(sales_path);
+            }
         }
 
         /// <summary>
@@ -237,13 +302,109 @@ namespace SalesManagerApp.View
             return select_path;
         }
 
-        private bool ReadAPIFile(string path)
+        /// <summary>
+        /// 商品マスタファイルデータ登録
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns></returns>
+        private bool SetProductFileData(string path)
         {
             bool result = false;
 
             try
             {
+                //ファイル管理クラス生成
+                var file_manager = new MainViewFileManager(new CsvFileProcessor());
 
+                //CSVファイル読込
+                var lst_filedata = new List<ProductFileData>();
+                file_manager.ReadFile(path, out lst_filedata);
+
+                //読み込んだデータを登録
+                result = _manager.SetProductMasterFileData(lst_filedata);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 在庫ファイルデータ登録
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns></returns>
+        private bool SetInventoryFileData(string path)
+        {
+            bool result = false;
+
+            try
+            {
+                //ファイル管理クラス生成
+                var file_manager = new MainViewFileManager(new CsvFileProcessor());
+
+                //CSVファイル読込
+                var lst_filedata = new List<InventoryFileData>();
+                file_manager.ReadFile(path, out lst_filedata);
+
+                //読み込んだデータを登録
+                result = _manager.SetInventoryFileData(lst_filedata);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 販売実績ファイルデータ登録
+        /// </summary>
+        /// <param name="path">ファイルパス</param>
+        /// <returns></returns>
+        private bool SetSaleFileData(string path)
+        {
+            bool result = false;
+
+            try
+            {
+                //ファイル名取得
+                string filename = Path.GetFileName(path).ToLower();
+
+                //読込履歴ファイル存在確認
+                if (File.Exists(SALES_READ_HISTORY))
+                {
+                    //履歴ファイルに今回のファイル名が含まれているか確認
+                    string[] importedFiles = File.ReadAllLines(SALES_READ_HISTORY);
+                    if (importedFiles.Contains(filename))
+                    {
+                        MessageBox.Show($"「{filename}」は既に取り込み済みです！", "確認", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                }
+
+                //ファイル管理クラス生成
+                var file_manager = new MainViewFileManager(new CsvFileProcessor());
+
+                //CSVファイル読込
+                var lst_filedata = new List<SaleFileData>();
+                file_manager.ReadFile(path, out lst_filedata);
+
+                //読み込んだデータを登録
+                result = _manager.SetSaleFileData(lst_filedata);
+
+                //登録成功ならファイルを読み込み済みとする
+                if (true == result)
+                {
+                    // append: true にすることで、既存の文字を消さずに末尾に足してくれます
+                    using (StreamWriter sw = new StreamWriter(SALES_READ_HISTORY, append: true))
+                    {
+                        sw.WriteLine(filename);
+                    }
+                }
             }
             catch (Exception e)
             {

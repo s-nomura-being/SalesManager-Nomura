@@ -17,6 +17,9 @@ namespace FileControlLib.Processor
     {
         private const string SHEET_NAME = "Sheet1";
 
+        /// <summary>拡張子</summary>
+        public string Extension { get; } = ".xlsx";
+
         /// <summary>
         /// Excelファイルを保存する
         /// </summary>
@@ -204,8 +207,34 @@ namespace FileControlLib.Processor
                     var header_row = worksheet.Row(1);
                     //太字設定
                     header_row.Style.Font.Bold = true;
-                    //背景色をグレーに設定
+                    //背景色を設定
                     header_row.Style.Fill.BackgroundColor = XLColor.LightGray;
+
+                    //列インデックス
+                    int colIndex = 1;
+                    //保存するデータのプロパティを取得
+                    var properties = typeof(T).GetProperties();
+                    //プロパティ分ループ
+                    foreach (var prop in properties)
+                    {
+                        //XLColumn-Ignoreがついているプロパティはスキップ
+                        var xlAttr = prop.GetCustomAttribute<ClosedXML.Attributes.XLColumnAttribute>();
+                        if (xlAttr != null && xlAttr.Ignore)
+                        {
+                            continue;
+                        }
+
+                        //書式属性がついているかチェック
+                        var formatAttr = prop.GetCustomAttribute<ExcelFormatAttribute>();
+                        if (formatAttr != null)
+                        {
+                            //属性がついていたら、その列に書式を適用する
+                            worksheet.Column(colIndex).Style.NumberFormat.Format = formatAttr.Format;
+                        }
+
+                        // 次の列へ
+                        colIndex++;
+                    }
                     //列幅を自動調整
                     worksheet.Columns().AdjustToContents();
                     //指定されたパスにワークブックを保存
@@ -221,6 +250,20 @@ namespace FileControlLib.Processor
             }
 
             return is_success;
+        }
+    }
+
+    /// <summary>
+    /// 書式属性
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]//属性使用制限(今回はプロパティのみに制限)
+    public class ExcelFormatAttribute : Attribute
+    {
+        public string Format { get; }
+
+        public ExcelFormatAttribute(string format)
+        {
+            Format = format;
         }
     }
 }

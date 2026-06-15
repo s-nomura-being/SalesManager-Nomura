@@ -1,5 +1,6 @@
 ﻿using ClosedXML.Attributes;
 using DocumentFormat.OpenXml.Wordprocessing;
+using FileControlLib.Processor;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -43,6 +44,7 @@ namespace SalesManagerApp.Data
         [Display(Name = "累計売上金額")]
         [XLColumn(Header = "累計売上金額")]
         [DisplayName("累計売上金額")]
+        [ExcelFormat("#,##0")]
         public int TotalSales { get; set; }
     }
 
@@ -77,6 +79,7 @@ namespace SalesManagerApp.Data
 
         /// <summary>在庫状況</summary>
         [Browsable(false)]
+        [XLColumn(Ignore = true)]
         public E_StockStatusType StatusType { get; set; } = E_StockStatusType.None;
     }
 
@@ -89,12 +92,14 @@ namespace SalesManagerApp.Data
         /// 集計開始日時
         /// </summary>
         [Browsable(false)]
+        [XLColumn(Ignore = true)]
         public DateTime StartDate { get; set; }
 
         /// <summary>
         /// 集計終了日時
         /// </summary>
         [Browsable(false)]
+        [XLColumn(Ignore = true)]
         public DateTime EndDate { get; set; }
 
         /// <summary>期間</summary>
@@ -119,6 +124,7 @@ namespace SalesManagerApp.Data
         [Display(Name = "累計売上金額")]
         [XLColumn(Header = "累計売上金額")]
         [DisplayName("累計売上金額")]
+        [ExcelFormat("#,##0")]
         public int TotalSales { get; set; }
     }
 
@@ -161,6 +167,7 @@ namespace SalesManagerApp.Data
         [Display(Name = "売上金額")]
         [XLColumn(Header = "売上金額")]
         [DisplayName("売上金額")]
+        [ExcelFormat("#,##0")]
         public int Sales { get; set; }
     }
 
@@ -197,12 +204,14 @@ namespace SalesManagerApp.Data
         [Display(Name = "商品単価")]
         [XLColumn(Header = "商品単価")]
         [DisplayName("商品単価")]
+        [ExcelFormat("#,##0")]
         public int UnitPrice { get; set; }
 
         /// <summary>在庫金額</summary>
         [Display(Name = "在庫金額")]
         [XLColumn(Header = "在庫金額")]
         [DisplayName("在庫金額")]
+        [ExcelFormat("#,##0")]
         public int StockValue { get; set; }
 
         /// <summary>最終販売日</summary>
@@ -253,6 +262,7 @@ namespace SalesManagerApp.Data
         [Display(Name = "単価")]
         [XLColumn(Header = "単価")]
         [DisplayName("単価")]
+        [ExcelFormat("#,##0")]
         public int UnitPrice { get; set; }
 
         /// <summary>区分</summary>
@@ -279,6 +289,29 @@ namespace SalesManagerApp.Data
         [XLColumn(Header = "区分名")]
         [DisplayName("区分名")]
         public string CategoryName { get; set; } = string.Empty;
+    }
+
+    public class ProductFileData
+    {
+        public int ProductId { get; set; }
+        public string ProductName { get; set; } = string.Empty;
+        public int UnitPrice { get; set; }
+        public string Category { get; set; } = string.Empty;
+    }
+
+    public class InventoryFileData
+    {
+        public int StoreId { get; set; }
+        public int ProductId { get; set; }
+        public int Stock { get; set; }
+    }
+
+    public class SaleFileData
+    {
+        public DateTime SaleDate { get; set; }
+        public int StoreId { get;set; }
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
     }
 
     /// <summary>

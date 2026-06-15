@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DatabaseLib\DatabaseLib.csproj" />
+    <ProjectReference Include="..\FileControlLib\FileControlLib.csproj" />
   </ItemGroup>
 
   <ItemGroup>

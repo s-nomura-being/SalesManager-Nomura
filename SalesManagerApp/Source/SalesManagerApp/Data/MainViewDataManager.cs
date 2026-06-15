@@ -1,4 +1,6 @@
-﻿using DatabaseLib.Table;
+﻿using DatabaseLib;
+using DatabaseLib.Table;
+using DocumentFormat.OpenXml.Wordprocessing;
 using SalesManagerApp.DBControl;
 using System;
 using System.Collections.Generic;
@@ -232,6 +234,172 @@ namespace SalesManagerApp.Data
             }
 
             return notice_type;
+        }
+
+        /// <summary>
+        /// 商品マスタデータ登録
+        /// </summary>
+        /// <param name="lst_filedata">商品マスタデータリスト</param>
+        /// <returns>成功した場合はtrue、それ以外はfalse</returns>
+        public bool SetProductMasterFileData(List<ProductFileData> lst_filedata)
+        {
+            bool result = true;
+
+            try
+            {
+                //区分情報を取得
+                var category_ctrl = new CategoryMasterControl(E_DBType.SQLite);
+                category_ctrl.GetCategoryMaster(out var category_data);
+
+                //取得した区分数を記憶しておく
+                int category_count = category_data.Count;
+
+                List<ProductMaster> lst_product = new List<ProductMaster>();
+
+                foreach (var filedata in lst_filedata)
+                {
+                    //区分名と一致するマスタデータを検索
+                    var match_data = category_data.FirstOrDefault(data => data.Category == filedata.Category);
+
+                    //一致する区分がない場合、区分マスタにも新規登録
+                    if (null == match_data)
+                    {
+                        //区分マスタデータ作成
+                        match_data = new CategoryMaster();
+                        //区分名
+                        match_data.Category = filedata.Category;
+                        //リストに追加
+                        category_data.Add(match_data);
+                    }
+
+                    //商品マスタデータ作成
+                    ProductMaster product = new ProductMaster();
+                    //商品ID
+                    product.Id = filedata.ProductId;
+                    //商品名
+                    product.Name = filedata.ProductName;
+                    //単価
+                    product.UnitPrice = filedata.UnitPrice;
+                    //区分ID
+                    product.CategoryId = match_data.Id;
+                    //区分情報
+                    product.Category = match_data;
+                    //リストに追加
+                    lst_product.Add(product);
+                }
+
+                //区分マスタ取得時から区分数が変わっている場合、区分マスタ登録
+                if(category_count != category_data.Count)
+                {
+                    //区分マスタ登録
+                    result &= category_ctrl.SetCategoryMaster(category_data);
+                }
+                //商品マスタ登録
+                result &= _productctrl.SetProductMaster(lst_product);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+                result = false;
+                throw;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 在庫データ登録
+        /// </summary>
+        /// <param name="lst_filedata">在庫データリスト</param>
+        /// <returns>成功した場合はtrue、それ以外はfalse</returns>
+        public bool SetInventoryFileData(List<InventoryFileData> lst_filedata)
+        {
+            bool result = true;
+
+            try
+            {
+                //変換用リスト
+                List<InventoryInfo> lst_info = new List<InventoryInfo>();
+
+                //読込データ数分ループして変換
+                foreach (var filedata in lst_filedata)
+                {
+                    //変換先データ
+                    InventoryInfo info = new InventoryInfo();
+                    //店舗ID
+                    info.StoreId = filedata.StoreId;
+                    //商品ID
+                    info.ProductId = filedata.ProductId;
+                    //在庫数
+                    info.Stock = filedata.Stock;
+                    //リストに追加
+                    lst_info.Add(info);
+                }
+                //変換したデータを登録する
+                var inventory_ctrl = new InventoryInfoControl(E_DBType.SQLite);
+                result = inventory_ctrl.SetInventoryInfo(lst_info);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+                result = false;
+                throw;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// 販売実績データ登録
+        /// </summary>
+        /// <param name="lst_filedata">販売実績データリスト</param>
+        /// <returns>成功した場合はtrue、それ以外はfalse</returns>
+        public bool SetSaleFileData(List<SaleFileData> lst_filedata)
+        {
+            bool result = true;
+
+            try
+            {
+                var sales_ctrl = new SalesResultControl(E_DBType.SQLite);
+                var product_ctrl = new ProductMasterControl(E_DBType.SQLite);
+
+                //変換用リスト
+                List<SalesResult> lst_sales = new List<SalesResult>();
+
+                //読込データ数分ループして変換
+                foreach (var filedata in lst_filedata)
+                {
+                    //変換先データ
+                    SalesResult sales = new SalesResult();
+                    //販売日
+                    sales.SaleDate = filedata.SaleDate;
+                    //店舗ID
+                    sales.StoreId = filedata.StoreId;
+                    //商品ID
+                    sales.ProductId = filedata.ProductId;
+                    //販売数
+                    sales.Quantity = filedata.Quantity;
+                    //販売金額
+                    product_ctrl.GetProductMaster(data => data.Id == filedata.ProductId, out var products);
+                    var product = products.FirstOrDefault(data => data.Id == filedata.ProductId);
+                    if (null != product)
+                    {
+                        sales.SalesAmount = filedata.Quantity * product.UnitPrice;
+                    }
+                    //リストに追加
+                    lst_sales.Add(sales);
+                }
+                //変換したデータを登録する
+                sales_ctrl.SetSalesResult(lst_sales);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error:{e}");
+                result = false;
+                throw;
+            }
+
+            return result;
         }
     }
 }
