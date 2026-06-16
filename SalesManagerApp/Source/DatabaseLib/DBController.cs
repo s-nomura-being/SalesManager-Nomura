@@ -140,7 +140,7 @@ namespace DatabaseLib
         /// <param name="update_data">更新するデータ</param>
         /// <param name="ids">更新対象のキー</param>
         /// <returns>T:成功 F:失敗</returns>
-        public bool UpdateRecord<T>(T update_data, params int[] ids) where T : class
+        public bool UpdateRecord<T>(T update_data, params object[] ids) where T : class
         {
             bool result = false;
 
