@@ -22,10 +22,10 @@ namespace SalesManagerApp.DBControl
         /// 販売実績のコントロールクラス
         /// </summary>
         /// <param name="dbType">DBの種類</param>
-        public SalesResultControl(E_DBType dbType)
+        public SalesResultControl(E_DBType dbType, string connection_string)
         {
             //DBコントローラー生成
-            _controller = new DBController(dbType);
+            _controller = new DBController(dbType, connection_string);
 
             //テーブルの初期化
             _controller.Init();

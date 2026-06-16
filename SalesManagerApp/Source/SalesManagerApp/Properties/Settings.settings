@@ -14,5 +14,8 @@
     <Setting Name="NoticeCount_Low" Description="発注通知しきい値-在庫少" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>
     </Setting>
+    <Setting Name="DbConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=DB/SalesManagerDB.db</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -22,10 +22,10 @@ namespace SalesManagerApp.DBControl
         /// 区分マスタのコントロールクラス
         /// </summary>
         /// <param name="dbType">DBの種類</param>
-        public CategoryMasterControl(E_DBType dbType)
+        public CategoryMasterControl(E_DBType dbType, string connection_string)
         {
             //DBコントローラー生成
-            _controller = new DBController(dbType);
+            _controller = new DBController(dbType, connection_string);
 
             //テーブルの初期化
             _controller.Init();
