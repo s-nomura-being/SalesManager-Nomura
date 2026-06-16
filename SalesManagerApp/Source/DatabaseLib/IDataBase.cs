@@ -31,7 +31,7 @@ namespace DatabaseLib
         /// <param name="update_data">更新するデータ</param>
         /// <param name="id">更新対象のキー</param>
         /// <returns>T:成功 F:失敗</returns>
-        bool UpdateRecord<T>(T update_data, params int[] id) where T : class;
+        bool UpdateRecord<T>(T update_data, params object[] id) where T : class;
 
         /// <summary>
         /// データ削除
