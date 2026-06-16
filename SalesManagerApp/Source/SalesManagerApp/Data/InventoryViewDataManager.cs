@@ -23,7 +23,7 @@ namespace SalesManagerApp.Data
         public InventoryViewDataManager()
         {
             //コントロールの初期化
-            _inventoryctrl = new InventoryInfoControl(DatabaseLib.E_DBType.SQLite);
+            _inventoryctrl = new InventoryInfoControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
         }
 
         /// <summary>

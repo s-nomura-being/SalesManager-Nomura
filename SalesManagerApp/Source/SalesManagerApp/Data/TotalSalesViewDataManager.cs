@@ -39,7 +39,7 @@ namespace SalesManagerApp.Data
         public TotalSalesViewDataManager()
         {
             //コントロールの初期化
-            _salesresultctrl = new SalesResultControl(DatabaseLib.E_DBType.SQLite);
+            _salesresultctrl = new SalesResultControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
         }
 
         /// <summary>

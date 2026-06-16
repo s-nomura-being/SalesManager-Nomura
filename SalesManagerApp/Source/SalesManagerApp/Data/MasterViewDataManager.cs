@@ -26,9 +26,9 @@ namespace SalesManagerApp.Data
         public MasterViewDataManager()
         {
             //コントロールの初期化
-            _storectrl = new StoreMasterControl(DatabaseLib.E_DBType.SQLite);
-            _productctrl = new ProductMasterControl(DatabaseLib.E_DBType.SQLite);
-            _categoryctrl = new CategoryMasterControl(DatabaseLib.E_DBType.SQLite);
+            _storectrl = new StoreMasterControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
+            _productctrl = new ProductMasterControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
+            _categoryctrl = new CategoryMasterControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
         }
 
         /// <summary>

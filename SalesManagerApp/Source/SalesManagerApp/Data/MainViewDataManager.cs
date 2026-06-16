@@ -28,7 +28,7 @@ namespace SalesManagerApp.Data
         public MainViewDataManager() 
         {
             //コントロールの初期化
-            _productctrl = new ProductMasterControl(DatabaseLib.E_DBType.SQLite);
+            _productctrl = new ProductMasterControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace SalesManagerApp.Data
             try
             {
                 //区分情報を取得
-                var category_ctrl = new CategoryMasterControl(E_DBType.SQLite);
+                var category_ctrl = new CategoryMasterControl(E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
                 category_ctrl.GetCategoryMaster(out var category_data);
 
                 //取得した区分数を記憶しておく
@@ -336,7 +336,7 @@ namespace SalesManagerApp.Data
                     lst_info.Add(info);
                 }
                 //変換したデータを登録する
-                var inventory_ctrl = new InventoryInfoControl(E_DBType.SQLite);
+                var inventory_ctrl = new InventoryInfoControl(E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
                 result = inventory_ctrl.SetInventoryInfo(lst_info);
             }
             catch (Exception e)
@@ -360,8 +360,8 @@ namespace SalesManagerApp.Data
 
             try
             {
-                var sales_ctrl = new SalesResultControl(E_DBType.SQLite);
-                var product_ctrl = new ProductMasterControl(E_DBType.SQLite);
+                var sales_ctrl = new SalesResultControl(E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
+                var product_ctrl = new ProductMasterControl(E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
 
                 //変換用リスト
                 List<SalesResult> lst_sales = new List<SalesResult>();

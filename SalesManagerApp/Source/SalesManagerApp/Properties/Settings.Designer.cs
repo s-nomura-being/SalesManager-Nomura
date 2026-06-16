@@ -86,5 +86,17 @@ namespace SalesManagerApp.Properties {
                 this["NoticeCount_Low"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DB/SalesManagerDB.db")]
+        public string DbConnectionString {
+            get {
+                return ((string)(this["DbConnectionString"]));
+            }
+            set {
+                this["DbConnectionString"] = value;
+            }
+        }
     }
 }

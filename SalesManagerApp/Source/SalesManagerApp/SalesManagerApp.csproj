@@ -44,6 +44,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="DB\SalesManagerDB.db">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

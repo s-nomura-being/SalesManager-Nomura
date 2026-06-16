@@ -27,7 +27,8 @@ namespace DatabaseLib
     /// </summary>
     public class DBController : DbContext, IDataBase
     {
-        private const string SQLITE_CONNECTION_STR = @"Data Source=C:\Working\研修\アプリ開発\アプリ開発研修\1.Git\SalesManager\DB\SalesManagerDB.db";
+        /// <summary>DB接続文字列</summary>
+        private string _connection_string { get; }
 
         /*
             テーブルフィールドは必ず書くこと
@@ -52,10 +53,12 @@ namespace DatabaseLib
         /// DB操作クラス
         /// </summary>
         /// <param name="db_type">使用するDBの種類</param>
-        public DBController(E_DBType db_type) : base()
+        public DBController(E_DBType db_type, string connection_string) : base()
         {
             //DBタイプを記憶
             DBType = db_type;
+            //接続文字列記憶
+            _connection_string = connection_string;
         }
 
         /// <summary>
@@ -70,7 +73,7 @@ namespace DatabaseLib
             {
                 case E_DBType.SQLite:
                     //SQLiteの接続先を設定する
-                    optionsBuilder.UseSqlite(SQLITE_CONNECTION_STR);
+                    optionsBuilder.UseSqlite(_connection_string);
                     break;
                 case E_DBType.SQL_Server:
                     throw new NotImplementedException();
