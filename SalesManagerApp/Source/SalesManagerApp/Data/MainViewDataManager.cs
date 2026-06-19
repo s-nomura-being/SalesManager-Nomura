@@ -59,10 +59,10 @@ namespace SalesManagerApp.Data
                     lst_lastweekdata = CreateProductSalesData(lst_product);
                     //在庫状況データ作成
                     lst_stockstatusdata = CreateStockStatusData(lst_product);
-                }
 
-                //作成成功
-                result = true;
+                    //作成成功
+                    result = true;
+                }
             }
             catch (Exception e)
             {
@@ -86,8 +86,8 @@ namespace SalesManagerApp.Data
             try
             {
                 //先週を算出
-                DateTime today = DateTime.Today;
-                DateTime lastWeek = today.AddDays(-7);
+                DateTime today = DateTime.Now;
+                DateTime lastWeek = DateTime.Today.AddDays(-7);
 
                 //商品マスタデータを分解して先週の商品売上データを作成する
                 foreach (var product in lst_product)

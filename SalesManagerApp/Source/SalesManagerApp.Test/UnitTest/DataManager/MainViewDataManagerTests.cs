@@ -88,8 +88,8 @@ namespace SalesManagerApp.Test.UnitTest.DataManager
             //販売情報登録
             var sales = new List<SalesResult>()
             {
-                new SalesResult(){Id = 1, StoreId = 1, ProductId = 1, Quantity = 10, SaleDate = new DateTime(2026,4,4), SalesAmount = 1000 },
-                new SalesResult(){Id = 2, StoreId = 2, ProductId = 2, Quantity = 5, SaleDate = new DateTime(2026,4,4), SalesAmount = 500 },
+                new SalesResult(){Id = 1, StoreId = 1, ProductId = 1, Quantity = 10, SaleDate = DateTime.Today, SalesAmount = 1000 },
+                new SalesResult(){Id = 2, StoreId = 2, ProductId = 2, Quantity = 5, SaleDate = DateTime.Today, SalesAmount = 500 },
             };
             var sale_ctrl = new SalesResultControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
            sale_ctrl.SetSalesResult(sales);
@@ -235,10 +235,9 @@ namespace SalesManagerApp.Test.UnitTest.DataManager
             var productCtrl = new ProductMasterControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
 
             // 基準日を計算（テスト実行日ベース）
-            DateTime today = DateTime.Today;
-            DateTime lastWeek = today.AddDays(-7);
-            DateTime twoWeeksAgo = today.AddDays(-14);
-            DateTime future = today.AddDays(1); // 今週または未来のデータ
+            DateTime lastWeek = DateTime.Today.AddDays(-7);
+            DateTime twoWeeksAgo = DateTime.Today.AddDays(-14);
+            DateTime future = DateTime.Today.AddDays(1); // 今週または未来のデータ
 
             //店舗、区分マスタ登録
             var store = new List<StoreMaster>()
