@@ -86,6 +86,8 @@ namespace SalesManagerApp.Data
                     default:
                         throw new Exception("不正な集計期間");
                 }
+
+                result = true;
             }
             catch (Exception e)
             {
