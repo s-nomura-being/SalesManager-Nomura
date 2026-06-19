@@ -225,7 +225,7 @@ namespace SalesManagerApp.Test.UnitTest.DataManager
             // インメモリDBに保存された内容を直接検証
             var inventoryCtrl = new InventoryInfoControl(DatabaseLib.E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
             inventoryCtrl.GetInventoryInfo(out var inventories);
-            Assert.That(inventories.Any(i => i.ProductId == 100 && i.Stock == 50), Is.True);
+            Assert.That(inventories.Any(i => i.ProductId == 1 && i.Stock == 50), Is.True);
         }
 
         [Test]
