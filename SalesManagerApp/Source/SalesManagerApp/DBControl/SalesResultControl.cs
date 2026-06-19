@@ -119,6 +119,7 @@ namespace SalesManagerApp.DBControl
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e.Message}");
+                throw;
             }
 
             return result;
