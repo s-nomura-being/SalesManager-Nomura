@@ -141,6 +141,7 @@ namespace SalesManagerApp.DBControl
             {
                 //在庫情報データを全て取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
                 inventoryinfoList = _controller.SelectRecord<InventoryInfo>()
+                                                .AsNoTracking()
                                                 .Include(data => data.Store)
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
@@ -172,6 +173,7 @@ namespace SalesManagerApp.DBControl
             {
                 //条件と一致する在庫情報データを取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
                 inventoryinfoList = _controller.SelectRecord(condition)
+                                                .AsNoTracking()
                                                 .Include(data => data.Store)
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
@@ -205,7 +207,8 @@ namespace SalesManagerApp.DBControl
                 //フィルター情報を適用
                 query = query.CreateInventoryFilter(filter);
                 //条件と一致する在庫情報データを取得する(店舗ID、商品IDから店舗名、商品名も同時に取得)
-                inventoryinfoList = query.Include(data => data.Store)
+                inventoryinfoList = query.AsNoTracking()
+                                            .Include(data => data.Store)
                                             .Include(data => data.Product)
                                             .Include(data => data.Product.Category)
                                             .Include(data => data.Product.SalesResults)

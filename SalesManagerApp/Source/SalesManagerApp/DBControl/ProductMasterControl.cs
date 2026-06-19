@@ -166,6 +166,7 @@ namespace SalesManagerApp.DBControl
             {
                 //商品マスタデータを全て取得する(商品毎の販売実績、在庫情報、カテゴリも同時に取得)
                 productMasterList = _controller.SelectRecord<ProductMaster>()
+                                        .AsNoTracking()
                                         .Include(data => data.SalesResults)
                                         .Include(data => data.InventoryInfos)
                                         .Include(data => data.Category)
@@ -196,6 +197,7 @@ namespace SalesManagerApp.DBControl
             {
                 //条件と一致する商品マスタデータを取得する(商品毎の販売実績、在庫情報、カテゴリも同時に取得)
                 productMasterList = _controller.SelectRecord(condition)
+                                        .AsNoTracking()
                                         .Include(data => data.SalesResults)
                                         .Include(data => data.InventoryInfos)
                                         .Include(data => data.Category)

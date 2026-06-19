@@ -1,5 +1,6 @@
 ﻿using DatabaseLib;
 using DatabaseLib.Table;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -168,7 +169,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //店舗マスタデータを全て取得する
-                storeMasterList = _controller.SelectRecord<StoreMaster>().ToList();
+                storeMasterList = _controller.SelectRecord<StoreMaster>().AsNoTracking().ToList();
                 result = true;
             }
             catch (Exception e)
@@ -193,7 +194,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 //条件と一致する店舗マスタデータを取得する
-                storeMasterList = _controller.SelectRecord(condition).ToList();
+                storeMasterList = _controller.SelectRecord(condition).AsNoTracking().ToList();
                 result = true;
             }
             catch (Exception e)
