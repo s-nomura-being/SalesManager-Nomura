@@ -152,7 +152,7 @@ namespace SalesManagerApp.Data
                     stockstate.Stock = product.InventoryInfos.Sum(inventory => inventory.Stock);
 
                     //販売後在庫数
-                    stockstate.AfterStock = totalsalescount;
+                    stockstate.AfterStock = stockstate.Stock - totalsalescount;
 
                     //発注通知
                     stockstate.Notice = GetNoticeString(stockstate.AfterStock);
