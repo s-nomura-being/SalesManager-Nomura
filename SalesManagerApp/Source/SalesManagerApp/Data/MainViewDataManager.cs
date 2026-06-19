@@ -50,7 +50,6 @@ namespace SalesManagerApp.Data
                 List<ProductMaster> lst_product = new List<ProductMaster>();
 
                 //商品マスタを取得
-                //TODO：現在日時から先週分のデータに対象を絞り込む必要あり
                 _productctrl.GetProductMaster(out lst_product);
 
                 //商品マスタデータが取得できたら各データを作成
@@ -60,10 +59,10 @@ namespace SalesManagerApp.Data
                     lst_lastweekdata = CreateProductSalesData(lst_product);
                     //在庫状況データ作成
                     lst_stockstatusdata = CreateStockStatusData(lst_product);
-
-                    //作成成功
-                    result = true;
                 }
+
+                //作成成功
+                result = true;
             }
             catch (Exception e)
             {
@@ -86,11 +85,16 @@ namespace SalesManagerApp.Data
 
             try
             {
+                //先週を算出
+                DateTime today = DateTime.Today;
+                DateTime lastWeek = today.AddDays(-7);
+
                 //商品マスタデータを分解して先週の商品売上データを作成する
                 foreach (var product in lst_product)
                 {
                     //1商品の販売数を算出
-                    int totalsalescount = product.SalesResults.Sum(sales => sales.Quantity);
+                    int totalsalescount = product.SalesResults.Where(sales => sales.SaleDate >= lastWeek && sales.SaleDate <= today)
+                                                                .Sum(sales => sales.Quantity);
 
                     //1行分のデータ用オブジェクト作成
                     LastWeekProductSalesData lastweekdata = new LastWeekProductSalesData();
