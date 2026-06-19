@@ -113,6 +113,18 @@ namespace SalesManagerApp.Test.UnitTest.DataManager
             Assert.That(lastWeekData.Count, Is.EqualTo(2), "商品数分のデータが作成されること");
             Assert.That(lastWeekData[0].ProductID, Is.EqualTo(1), "商品IDの昇順でソートされること");
             Assert.That(lastWeekData[1].ProductID, Is.EqualTo(2));
+            //在庫データの検証
+            Assert.That(stockData.Count, Is.EqualTo(2), "商品数分のデータが作成されること");
+            Assert.That(stockData[0].Notice, Is.EqualTo("要発注"));
+            Assert.That(stockData[1].Notice, Is.EqualTo("在庫が少ない"));
+            Assert.That(stockData[0].StatusType, Is.EqualTo(E_StockStatusType.Must));
+            Assert.That(stockData[1].StatusType, Is.EqualTo(E_StockStatusType.Low));
+            Assert.That(stockData[0].ProductName, Is.EqualTo("商品B"));
+            Assert.That(stockData[1].ProductName, Is.EqualTo("商品A"));
+            Assert.That(stockData[0].Stock, Is.EqualTo(10));
+            Assert.That(stockData[1].Stock, Is.EqualTo(20));
+            Assert.That(stockData[0].AfterStock, Is.EqualTo(5), "在庫数10 - 販売数5 = 5");
+            Assert.That(stockData[1].AfterStock, Is.EqualTo(10), "在庫数20 - 販売数10 = 10");
 
             // 累計金額・在庫の計算確認
             Assert.That(lastWeekData[0].TotalSales, Is.EqualTo(2000), "10個 * 200円 = 2000円であること");
