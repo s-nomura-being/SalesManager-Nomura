@@ -251,9 +251,6 @@ namespace SalesManagerApp.Data
                 var category_ctrl = new CategoryMasterControl(E_DBType.SQLite, Properties.Settings.Default.DbConnectionString);
                 category_ctrl.GetCategoryMaster(out var category_data);
 
-                //取得した区分数を記憶しておく
-                int category_count = category_data.Count;
-
                 List<ProductMaster> lst_product = new List<ProductMaster>();
 
                 foreach (var filedata in lst_filedata)
@@ -261,15 +258,13 @@ namespace SalesManagerApp.Data
                     //区分名と一致するマスタデータを検索
                     var match_data = category_data.FirstOrDefault(data => data.Category == filedata.Category);
 
-                    //一致する区分がない場合、区分マスタにも新規登録
+                    //一致する区分がない場合、区分を新規作成
                     if (null == match_data)
                     {
                         //区分マスタデータ作成
                         match_data = new CategoryMaster();
                         //区分名
                         match_data.Category = filedata.Category;
-                        //リストに追加
-                        category_data.Add(match_data);
                     }
 
                     //商品マスタデータ作成
@@ -280,20 +275,12 @@ namespace SalesManagerApp.Data
                     product.Name = filedata.ProductName;
                     //単価
                     product.UnitPrice = filedata.UnitPrice;
-                    //区分ID
-                    product.CategoryId = match_data.Id;
                     //区分情報
                     product.Category = match_data;
                     //リストに追加
                     lst_product.Add(product);
                 }
 
-                //区分マスタ取得時から区分数が変わっている場合、区分マスタ登録
-                if(category_count != category_data.Count)
-                {
-                    //区分マスタ登録
-                    result &= category_ctrl.SetCategoryMaster(category_data);
-                }
                 //商品マスタ登録
                 result &= _productctrl.SetProductMaster(lst_product);
             }
