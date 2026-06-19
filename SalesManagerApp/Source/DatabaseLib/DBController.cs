@@ -99,10 +99,21 @@ namespace DatabaseLib
         /// <summary>
         /// DB初期化処理
         /// </summary>
-        public void Init()
+        public bool Init()
         {
-            //DBがなければ作成
-            Database.EnsureCreated();
+            bool issuccess = false;
+
+            try
+            {
+                //DBがなければ作成
+                Database.EnsureCreated();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Err:{e}");
+            }
+
+            return issuccess;
         }
 
         /// <summary>

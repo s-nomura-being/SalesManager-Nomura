@@ -14,7 +14,7 @@ namespace DatabaseLib
         /// <summary>
         /// DB初期化処理
         /// </summary>
-        void Init();
+        bool Init();
 
         /// <summary>
         /// データ挿入

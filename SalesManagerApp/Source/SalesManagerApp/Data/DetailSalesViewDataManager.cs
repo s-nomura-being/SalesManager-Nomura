@@ -146,6 +146,7 @@ namespace SalesManagerApp.Data
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e}");
+                throw;
             }
 
             //日付順

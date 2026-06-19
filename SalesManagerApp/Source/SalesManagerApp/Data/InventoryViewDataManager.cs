@@ -150,6 +150,7 @@ namespace SalesManagerApp.Data
             catch (Exception e)
             {
                 Console.WriteLine($"Error: {e}");
+                throw;
             }
 
             return lst_inventorydata;
