@@ -109,6 +109,7 @@ namespace SalesManagerApp.DBControl
             {
                 //販売実績データを全て取得する(店舗ID、商品IDから店舗マスタ、商品マスタも同時に取得)
                 salesresultList = _controller.SelectRecord<SalesResult>()
+                                                .AsNoTracking()
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
                                                 .Include(data => data.Store)
@@ -140,6 +141,7 @@ namespace SalesManagerApp.DBControl
             {
                 //条件と一致する販売実績データを取得する(店舗ID、商品IDから店舗マスタ、商品マスタも同時に取得)
                 salesresultList = _controller.SelectRecord(condition)
+                                                .AsNoTracking()
                                                 .Include(data => data.Product)
                                                 .Include(data => data.Product.Category)
                                                 .Include(data => data.Store)
@@ -174,6 +176,7 @@ namespace SalesManagerApp.DBControl
                 query = query.CreateSalesFilter(filter);
                 //条件と一致する販売実績データを取得する(店舗ID、商品IDから店舗マスタ、商品マスタも同時に取得)
                 salesresultList = query.Include(data => data.Product)
+                                        .AsNoTracking()
                                         .Include(data => data.Product.Category)
                                         .Include(data => data.Store)
                                         .OrderBy(data => data.SaleDate)
@@ -197,6 +200,7 @@ namespace SalesManagerApp.DBControl
             try
             {
                 salesresultList = _controller.SelectRecord<SalesResult>(data => data.SaleDate >= start_date && data.SaleDate <= end_date)
+                                        .AsNoTracking()
                                         .Include(data => data.Product)
                                         .Include(data => data.Product.Category)
                                         .Include(data => data.Store)
@@ -210,11 +214,5 @@ namespace SalesManagerApp.DBControl
 
             return result;
         }
-
-        //TODO：昇順、降順取得
-
-        //グループ化して取得
-
-
     }
 }

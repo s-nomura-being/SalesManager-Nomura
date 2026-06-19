@@ -166,6 +166,7 @@ namespace SalesManagerApp.DBControl
             {
                 //区分マスタデータを全て取得する
                 categoryMasterList = _controller.SelectRecord<CategoryMaster>()
+                                                .AsNoTracking()
                                                 .Include(data => data.ProductMasters)
                                                 .ToList();
                 result = true;
@@ -193,6 +194,7 @@ namespace SalesManagerApp.DBControl
             {
                 //条件と一致する区分マスタデータを取得する
                 categoryMasterList = _controller.SelectRecord(condition)
+                                                .AsNoTracking()
                                                 .Include(data => data.ProductMasters)
                                                 .ToList();
                 result = true;
